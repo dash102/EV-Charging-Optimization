@@ -11,3 +11,4 @@ node_network = [[0, inf, inf, 1, 3, 5, inf, inf],
                 [inf, inf, 1, inf, inf, inf, inf, 0]]
 
 print(sparse.csgraph.johnson(node_network, directed=False))
+print("HI")
