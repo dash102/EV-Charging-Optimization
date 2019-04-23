@@ -1,8 +1,11 @@
 from scipy import sparse
+import csv
 
 inf = float('inf')
-nodes = [0, 1, 2, 3, 4, 5, 6, 7]  # nodes a through h
-node_network = [[0, inf, inf, 1, 3, 5, inf, inf],
+
+# first test graph
+nodes_1 = [0, 1, 2, 3, 4, 5, 6, 7]  # nodes a through h
+node_network_1 = [[0, inf, inf, 1, 3, 5, inf, inf],
                 [inf, 0, 2, 5, inf, inf, inf, inf],
                 [inf, 2, 0, inf, 4, inf, 7, 1],
                 [1, 5, inf, 0, inf, inf, inf, inf],
@@ -11,10 +14,14 @@ node_network = [[0, inf, inf, 1, 3, 5, inf, inf],
                 [inf, inf, 7, inf, 3, inf, 0, inf],
                 [inf, inf, 1, inf, inf, inf, inf, 0]]
 
+# second test graph
+nodes_2 = []
+node_network_2 = []
+
+nodes = nodes_2
+node_network = node_network_2
+
 dist, parent = sparse.csgraph.johnson(node_network, directed=False, return_predecessors=True)
-# print(dist)
-# print(parent)
-# print()
 mileage = 8
 all_paths = dict()
 all_distances = dict()
@@ -56,3 +63,13 @@ for (start, end) in constraint_sets_letters.keys():
 
 for (start, end) in constraint_sets_letters.keys():
     print((chr(start + 97), chr(end + 97)), ":", constraint_sets_letters[(start, end)])
+
+# Write to CSV file
+
+with open('ev_constraints.csv', mode='w', newline='') as ev_constraints:
+    ev_writer = csv.writer(ev_constraints, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+
+    for (start, end) in constraint_sets.keys():
+        if len(constraint_sets[(start, end)]) > 0:
+            # print(constraint_sets[(start, end)])
+            ev_writer.writerow(constraint_sets[(start, end)])
