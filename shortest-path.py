@@ -15,9 +15,28 @@ node_network_1 = [[0, inf, inf, 1, 3, 5, inf, inf],
                 [inf, inf, 1, inf, inf, inf, inf, 0]]
 
 # second test graph
-nodes_2 = []
-node_network_2 = []
+nodes_2 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+node_network_2 = [[0, 4, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf],  # 0
+                  [4, 0, 2, inf, inf, inf, inf, inf, 2, inf, inf, inf, inf, inf, inf, inf, inf, inf, 1],
+                  [inf, 2, 0, 7, inf, inf, inf, inf, inf, inf, inf, 5, inf, inf, inf, inf, inf, inf, inf],
+                  [inf, inf, 7, 0, 3, 1, inf, inf, inf, 7, inf, inf, inf, inf, inf, inf, inf, inf, inf],
+                  [inf, inf, inf, 3, 0, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf],
+                  [inf, inf, inf, 1, inf, 0, inf, inf, inf, inf, 1, inf, inf, inf, inf, inf, inf, inf, inf],  # 5
+                  [inf, inf, inf, inf, inf, inf, 0, 4, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, 1],
+                  [inf, inf, inf, inf, inf, inf, 4, 0, 3, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf],
+                  [inf, 2, inf, inf, inf, inf, inf, 3, 0, inf, inf, 6, inf, inf, inf, inf, inf, inf, inf],
+                  [inf, inf, inf, 7, inf, inf, inf, inf, inf, 0, inf, inf, 2, inf, inf, inf, inf, 4, inf],
+                  [inf, inf, inf, inf, inf, 1, inf, inf, inf, inf, 0, inf, inf, 3, inf, inf, inf, 5, inf],  # 10
+                  [inf, inf, 5, inf, inf, inf, inf, inf, 6, inf, inf, 0, inf, inf, 5, inf, inf, inf, inf],
+                  [inf, inf, inf, inf, inf, inf, inf, inf, inf, 2, inf, inf, 0, inf, inf, 1, inf, inf, inf],
+                  [inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, 3, inf, inf, 0, inf, inf, inf, inf, inf],
+                  [inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, 5, inf, inf, 0, 2, inf, inf, inf],
+                  [inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, 1, inf, 2, 0, 6, inf, inf],  # 15
+                  [inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, 6, 0, inf, inf],
+                  [inf, inf, inf, inf, inf, inf, inf, inf, inf, 4, 5, inf, inf, inf, inf, inf, inf, 0, inf],
+                  [inf, 1, inf, inf, inf, inf, 1, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, inf, 0]]
 
+# pick test graph
 nodes = nodes_2
 node_network = node_network_2
 
@@ -56,13 +75,14 @@ for (start, end) in all_paths:
             single_constraint.append(all_paths[(start, end)][node - 1])
     constraint_sets[(start, end)] = single_constraint
 
-constraint_sets_letters = constraint_sets.copy()
-for (start, end) in constraint_sets_letters.keys():
-    for n in range(len(constraint_sets_letters[start, end])):
-        constraint_sets_letters[start, end][n] = chr(constraint_sets[start, end][n] + 97)
-
-for (start, end) in constraint_sets_letters.keys():
-    print((chr(start + 97), chr(end + 97)), ":", constraint_sets_letters[(start, end)])
+# Uncomment if nodes should be output as letters
+# constraint_sets_letters = constraint_sets.copy()
+# for (start, end) in constraint_sets_letters.keys():
+#     for n in range(len(constraint_sets_letters[start, end])):
+#         constraint_sets_letters[start, end][n] = chr(constraint_sets[start, end][n] + 97)
+#
+# for (start, end) in constraint_sets_letters.keys():
+#     print((chr(start + 97), chr(end + 97)), ":", constraint_sets_letters[(start, end)])
 
 # Write to CSV file
 
@@ -71,5 +91,5 @@ with open('ev_constraints.csv', mode='w', newline='') as ev_constraints:
 
     for (start, end) in constraint_sets.keys():
         if len(constraint_sets[(start, end)]) > 0:
-            # print(constraint_sets[(start, end)])
+            # print((start, end), ":", constraint_sets[(start, end)])
             ev_writer.writerow(constraint_sets[(start, end)])
