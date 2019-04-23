@@ -12,16 +12,15 @@ node_network = [[0, inf, inf, 1, 3, 5, inf, inf],
                 [inf, inf, 1, inf, inf, inf, inf, 0]]
 
 dist, parent = sparse.csgraph.johnson(node_network, directed=False, return_predecessors=True)
-print(dist)
-print(parent)
-
-mileage = 7
-constraint_node = []
-constraint_distance = []
+# print(dist)
+# print(parent)
+# print()
+mileage = 8
+all_paths = dict()
+all_distances = dict()
 
 for start_node in range(len(nodes)):
     for end_node in range(start_node + 1, len(nodes)):
-        if start_node == 0 and end_node == 7:
             # print(start_node, end_node)
             parent_nodes = [end_node]
             distances = []
@@ -33,9 +32,27 @@ for start_node in range(len(nodes)):
                 parent_nodes.append(parent[start_node][parent_nodes[-1]])
             parent_nodes.reverse()
             distances.reverse()
+            all_paths[(start_node, end_node)] = parent_nodes
+            all_distances[(start_node, end_node)] = distances
 
-            sub_constraint = []
-            sub_distance_constraint = []
+# all_paths now stores entire path for each (start, end) pair
+# all_distances similarly stores distances between each node in a path for each (start, end) pair
 
-            distance_tracker = 0
-            last_distance = 0
+constraint_sets = dict()
+for (start, end) in all_paths:
+    single_constraint = []
+    counter = 0
+    for node in range(1, len(all_paths[(start, end)])):
+        if counter + all_distances[(start, end)][node - 1] <= mileage:
+            counter += all_distances[(start, end)][node - 1]
+        else:
+            single_constraint.append(all_paths[(start, end)][node - 1])
+    constraint_sets[(start, end)] = single_constraint
+
+constraint_sets_letters = constraint_sets.copy()
+for (start, end) in constraint_sets_letters.keys():
+    for n in range(len(constraint_sets_letters[start, end])):
+        constraint_sets_letters[start, end][n] = chr(constraint_sets[start, end][n] + 97)
+
+for (start, end) in constraint_sets_letters.keys():
+    print((chr(start + 97), chr(end + 97)), ":", constraint_sets_letters[(start, end)])
