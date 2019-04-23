@@ -41,7 +41,7 @@ nodes = nodes_2
 node_network = node_network_2
 
 dist, parent = sparse.csgraph.johnson(node_network, directed=False, return_predecessors=True)
-mileage = 8
+mileage = 13
 all_paths = dict()
 all_distances = dict()
 
@@ -66,16 +66,30 @@ for start_node in range(len(nodes)):
 
 constraint_sets = dict()
 for (start, end) in all_paths:
-    # if start == 16 and end == 18:
-    single_constraint = []
-    counter = 0
-    for node in range(1, len(all_paths[(start, end)])):
-        if counter + all_distances[(start, end)][node - 1] <= mileage:
-            counter += all_distances[(start, end)][node - 1]
-        else:
-            single_constraint.append(all_paths[(start, end)][node - 1])
-            counter = all_distances[(start, end)][node - 1]
-    constraint_sets[(start, end)] = single_constraint
+    constraint_sets[(start, end)] = []
+    # if start == 6 and end == 10:
+    #     print(all_paths[(6, 10)])
+    for start_node in range(len(all_paths[(start, end)])):
+        # print(all_paths[(start, end)][start_node])
+        distance_tracker = 0
+        path_tracker = [all_paths[(start, end)][start_node]]
+        over_counter = 0
+        for node in range(start_node + 1, len(all_paths[(start, end)])):
+            if all_distances[(start, end)][node - 1] + distance_tracker <= mileage:
+                path_tracker.append(all_paths[(start, end)][node])
+                distance_tracker += all_distances[(start, end)][node - 1]
+            elif over_counter == 0:
+                path_tracker.append(all_paths[(start, end)][node])
+                distance_tracker += all_distances[(start, end)][node - 1]
+                over_counter = 1
+            elif over_counter == 1:
+                break
+        if distance_tracker > mileage:
+            constraint_sets[(start, end)].append(path_tracker[:-1])
+        elif distance_tracker == mileage:
+            constraint_sets[(start, end)].append(path_tracker)
+
+    print(constraint_sets[(start, end)])
 
 # Uncomment if nodes should be output as letters
 # constraint_sets_letters = constraint_sets.copy()
@@ -90,7 +104,8 @@ for (start, end) in all_paths:
 
 max_length = 0
 for (start, end) in constraint_sets.keys():
-    max_length = max(len(constraint_sets[(start, end)]), max_length)
+    for l in constraint_sets[(start, end)]:
+        max_length = max(len(l), max_length)
 
 header = []
 for i in range(max_length):
@@ -100,6 +115,7 @@ with open('ev_constraints.csv', mode='w', newline='') as ev_constraints:
     ev_writer = csv.writer(ev_constraints, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     ev_writer.writerow(header)
     for (start, end) in constraint_sets.keys():
-        if len(constraint_sets[(start, end)]) > 0:
-            # print((start, end), ":", constraint_sets[(start, end)])
-            ev_writer.writerow(constraint_sets[(start, end)])
+        for l in constraint_sets[(start, end)]:
+            if len(constraint_sets[(start, end)]) > 0:
+                # print((start, end), ":", constraint_sets[(start, end)])
+                ev_writer.writerow(l)
