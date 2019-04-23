@@ -66,6 +66,7 @@ for start_node in range(len(nodes)):
 
 constraint_sets = dict()
 for (start, end) in all_paths:
+    # if start == 16 and end == 18:
     single_constraint = []
     counter = 0
     for node in range(1, len(all_paths[(start, end)])):
@@ -73,6 +74,7 @@ for (start, end) in all_paths:
             counter += all_distances[(start, end)][node - 1]
         else:
             single_constraint.append(all_paths[(start, end)][node - 1])
+            counter = all_distances[(start, end)][node - 1]
     constraint_sets[(start, end)] = single_constraint
 
 # Uncomment if nodes should be output as letters
