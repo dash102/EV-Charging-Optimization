@@ -88,9 +88,12 @@ for (start, end) in all_paths:
 
 # Write to CSV file
 
+max_length = 0
+for (start, end) in constraint_sets.keys():
+    max_length = max(len(constraint_sets[(start, end)]), max_length)
 with open('ev_constraints.csv', mode='w', newline='') as ev_constraints:
     ev_writer = csv.writer(ev_constraints, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-
+    ev_writer.writerow(['station'] * max_length)
     for (start, end) in constraint_sets.keys():
         if len(constraint_sets[(start, end)]) > 0:
             # print((start, end), ":", constraint_sets[(start, end)])
