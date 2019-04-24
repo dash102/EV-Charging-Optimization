@@ -67,8 +67,6 @@ for start_node in range(len(nodes)):
 constraint_sets = dict()
 for (start, end) in all_paths:
     constraint_sets[(start, end)] = []
-    # if start == 6 and end == 10:
-    #     print(all_paths[(6, 10)])
     for start_node in range(len(all_paths[(start, end)])):
         # print(all_paths[(start, end)][start_node])
         distance_tracker = 0
@@ -84,11 +82,9 @@ for (start, end) in all_paths:
                 over_counter = 1
             elif over_counter == 1:
                 break
-        if distance_tracker > mileage:
-            constraint_sets[(start, end)].append(path_tracker[:-1])
-        elif distance_tracker == mileage:
-            constraint_sets[(start, end)].append(path_tracker)
-
+        if distance_tracker >= mileage:
+            constraint_sets[(start, end)].append(path_tracker[1:-1])
+        # print(distance_tracker)
     print(constraint_sets[(start, end)])
 
 # Uncomment if nodes should be output as letters
