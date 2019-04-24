@@ -134,14 +134,14 @@ for (start, end) in all_paths:
     for start_node in range(len(all_paths[(start, end)])):
         # print(all_paths[(start, end)][start_node])
         distance_tracker = 0
-        path_tracker = [all_paths[(start, end)][start_node]]
+        path_tracker = [all_paths[(start, end)][start_node] + 1]
         over_counter = 0
         for node in range(start_node + 1, len(all_paths[(start, end)])):
             if all_distances[(start, end)][node - 1] + distance_tracker <= mileage:
-                path_tracker.append(all_paths[(start, end)][node])
+                path_tracker.append(all_paths[(start, end)][node] + 1)
                 distance_tracker += all_distances[(start, end)][node - 1]
             elif over_counter == 0:
-                path_tracker.append(all_paths[(start, end)][node])
+                path_tracker.append(all_paths[(start, end)][node] + 1)
                 distance_tracker += all_distances[(start, end)][node - 1]
                 over_counter = 1
             elif over_counter == 1:
