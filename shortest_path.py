@@ -171,8 +171,6 @@ with open('ev_constraints.csv', mode='w', newline='') as ev_constraints:
             if len(l) == max_length:
                 longest.append(l)
                 ev_writer.writerow(l)
-                print("hi")
-                break
 
     for (start, end) in constraint_sets.keys():
         for l in constraint_sets[(start, end)]:
