@@ -149,33 +149,33 @@ for (start, end) in all_paths:
         if distance_tracker >= mileage:
             constraint_sets[(start, end)].append(path_tracker[1:-1])
         # print(distance_tracker)
-    print(constraint_sets[(start, end)])
+    # print(constraint_sets[(start, end)])
 
-# Uncomment if nodes should be output as letters
-# constraint_sets_letters = constraint_sets.copy()
-# for (start, end) in constraint_sets_letters.keys():
-#     for n in range(len(constraint_sets_letters[start, end])):
-#         constraint_sets_letters[start, end][n] = chr(constraint_sets[start, end][n] + 97)
-#
-# for (start, end) in constraint_sets_letters.keys():
-#     print((chr(start + 97), chr(end + 97)), ":", constraint_sets_letters[(start, end)])
-
-# Write to CSV file
-
+# Add headers to CSV
 max_length = 0
 for (start, end) in constraint_sets.keys():
     for l in constraint_sets[(start, end)]:
         max_length = max(len(l), max_length)
-
 header = []
 for i in range(max_length):
     header.append('station_' + str(i + 1))
 
+longest = []
+
+# Write to CSV file
 with open('ev_constraints.csv', mode='w', newline='') as ev_constraints:
     ev_writer = csv.writer(ev_constraints, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     ev_writer.writerow(header)
     for (start, end) in constraint_sets.keys():
         for l in constraint_sets[(start, end)]:
-            if len(constraint_sets[(start, end)]) > 0:
-                # print((start, end), ":", constraint_sets[(start, end)])
+            if len(l) == max_length:
+                longest.append(l)
                 ev_writer.writerow(l)
+                print("hi")
+                break
+
+    for (start, end) in constraint_sets.keys():
+        for l in constraint_sets[(start, end)]:
+            if len(constraint_sets[(start, end)]) > 0 and l not in longest:
+                ev_writer.writerow(l)
+
