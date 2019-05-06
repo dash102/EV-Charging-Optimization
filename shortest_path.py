@@ -176,4 +176,3 @@ with open('ev_constraints.csv', mode='w', newline='') as ev_constraints:
         for l in constraint_sets[(start, end)]:
             if len(constraint_sets[(start, end)]) > 0 and l not in longest:
                 ev_writer.writerow(l)
-
